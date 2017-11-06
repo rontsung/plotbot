@@ -33,6 +33,7 @@ def plotbot():
             print(user)
             print(len(user))
             if len(user) > 1:
+                print("have to check")
                 #check if bot has already analyzed the user
                 validate = CheckUser(user)
                 print(validate)
@@ -47,13 +48,6 @@ def plotbot():
                     return print("already analyzed")
     except:
         return print("nothing happened")
-    #store record of analysis of user in csv
-    arr = pd.read_csv("tea.csv")
-    cur = len(arr)
-    arr.set_value(cur, "User", user)
-    arr.set_value(cur, "Thanks", thanks)
-    arr.set_value(cur, "Time", str(datetime.now()))
-    arr.to_csv("tea.csv", index = False)
     return print("woo") 
 
 def anlyz(u,t):
@@ -64,15 +58,15 @@ def anlyz(u,t):
     df["tweet"] = ""
     df["polarity"] = ""
     df["tweet ago"] = ""
-    base = api.user_timeline(screen_name = u, count = 1)
-    #find max id to avoid potential overlap
-    for tweet in base:
-        print(json.dumps(tweet, sort_keys=True, indent=4, separators=(',', ': ')))
-        m_id = tweet["id_str"]
-        print(m_id)
+#     base = api.user_timeline(screen_name = u, count = 1)
+#     #find max id to avoid potential overlap
+#     for tweet in base:
+#         print(json.dumps(tweet, sort_keys=True, indent=4, separators=(',', ': ')))
+#         m_id = tweet["id_str"]
+#         print(m_id)
     #retrieve tweets, analyze text, store in dataframe
     for v in range(1,6):
-        timeline = api.user_timeline(screen_name = u, count = 100, max_id = m_id, page = v)
+        timeline = api.user_timeline(screen_name = u, count = 100, page = v)#max_id = m_id
         for tweet in timeline:
             text = tweet["text"]
             print(text)
@@ -100,9 +94,10 @@ def anlyz(u,t):
     print("success!")
 
 def CheckUser(a):
-    record = pd.read_csv("tea.csv")
-    for each in record["User"]:
-        if each == a:
+    print("checking")
+    record = api.user_timeline()
+    for each in record:
+        if a in each["text"]:
             return False
     return True
 
