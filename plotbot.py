@@ -1,4 +1,6 @@
-import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Agg')
+from matplotlib import pyplot as plt
 import pandas as pd
 import tweepy
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
